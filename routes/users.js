@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('../models/user');
 const passport = require('passport');
+const authenticate = require("../authenticate")
 
 const router = express.Router();
 router.use(bodyParser.json())
@@ -31,10 +32,15 @@ router.post('/signup', (req, res, next) => {
     })
 })
 
+//create a token
 router.post("/login", passport.authenticate('local'), (req, res) => {
+    
+    //userId is usually enough to search for a user
+    //The passort.authenticate('local') above will load up a user on the request message
+    const token = authenticate.getToken({_id: req.user._id}) //userId is usually enough to search for a user
     res.statusCode = 200
     res.setHeader('Content-Type', 'application/json')
-    res.json({success: true, status: "You are successfully logged in!"})
+    res.json({success: true, token, status: "You are successfully logged in!"})
 })
 
 router.get('/logout', (req, res) => {

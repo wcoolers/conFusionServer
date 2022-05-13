@@ -15,7 +15,7 @@ passport.serializeUser( User.serializeUser() )
 passport.deserializeUser( User.deserializeUser() )
 
 exports.getToken = function(user) {
-    return jwt.sign(user, config.secretKey, {expiresIn: 3600}) //set time for the token to expire. Usually days
+    return jwt.sign(user, config.secretKey, {expiresIn: 36000000}) //set time for the token to expire. Usually days
 }
 
 const opts = {}

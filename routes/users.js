@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const User = require('../models/user');
 const passport = require('passport');
 const authenticate = require("../authenticate")
+const cors = require("./cors")
 
 const router = express.Router();
 router.use(bodyParser.json())
 
 
 /* GET users listing. */
-router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, 
+router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, 
     (req, res, next) => {
         User.find({})
         .then( (users) => {
@@ -20,7 +21,7 @@ router.get('/', authenticate.verifyUser, authenticate.verifyAdmin,
         .catch((err) => next(err))
 });
 
-router.post('/signup', (req, res, next) => {
+router.post('/signup', cors.corsWithOptions, (req, res, next) => {
     User.register(new User({ username: req.body.username}), 
     req.body.password, (err, user) => {
         if (err) {
@@ -53,7 +54,7 @@ router.post('/signup', (req, res, next) => {
 })
 
 //create a token
-router.post("/login", passport.authenticate('local'), (req, res) => {
+router.post("/login", cors.corsWithOptions, passport.authenticate('local'), (req, res) => {
     
     //userId is usually enough to search for a user
     //The passort.authenticate('local') above will load up a user on the request message
